@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoSync Resolve Studio — Güncelleme Sunucusu Yönetim Paneli</title>
+  <style>
+    :root {
+      --bg: #0b0d13;
+      --card: #131722;
+      --border: #232938;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 880px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2563eb, #14b8a6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: #fff;
+    }
+    h1 { font-size: 19px; font-weight: 700; }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-live span {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #22c55e;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .metric-title { font-size: 12px; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+    .metric-val { font-size: 24px; font-weight: 800; margin-top: 6px; color: #fff; }
+    .metric-sub { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    input[type="text"], input[type="date"], textarea {
+      width: 100%;
+      background: #0f131c;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: #fff;
+      padding: 10px 12px;
+      font-size: 13.5px;
+      outline: none;
+    }
+    input[type="text"]:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    }
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+    .file-dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      background: #0f131c;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+    .file-dropzone:hover {
+      border-color: var(--accent);
+      background: rgba(37, 99, 235, 0.05);
+    }
+    .file-dropzone p { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+    .btn-submit {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: 1px solid #60a5fa;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      transition: all 0.15s;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      transform: translateY(-1px);
+    }
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+    .info-box {
+      background: #0f131c;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+    .info-box strong { color: #fff; }
+    .code-pill {
+      background: #1e293b;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+      color: #93c5fd;
+    }
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .alert-success { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .alert-error { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">A</div>
+        <div>
+          <h1>AutoSync Resolve Studio</h1>
+          <p style="font-size:12px;color:var(--muted)">Ücretsiz OTA Güncelleme Dağıtım Sunucusu</p>
+        </div>
+      </div>
+      <div class="badge-live">
+        <span></span> Canlı Yayında
+      </div>
+    </header>
+
+    <div class="alert alert-success" id="alertSuccess"></div>
+    <div class="alert alert-error" id="alertError"></div>
+
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-title">Yayındaki Güncel Sürüm</div>
+        <div class="metric-val" id="valCurrentVer" style="color:#60a5fa">v3.1.0</div>
+        <div class="metric-sub" id="valReleaseDate">Yayın: 2026-11-09</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Toplam Güncelleme Sorgusu</div>
+        <div class="metric-val" id="valCheckCount" style="color:#4ade80">0</div>
+        <div class="metric-sub">Kurulu bilgisayarların denetim sayısı</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Windows Kurulum Paketi</div>
+        <div class="metric-val" id="valWinSize" style="font-size:20px;">--</div>
+        <div class="metric-sub" id="valWinDl">0 indirme</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">macOS Kurulum Paketi</div>
+        <div class="metric-val" id="valMacSize" style="font-size:20px;">--</div>
+        <div class="metric-sub" id="valMacDl">0 indirme</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🚀 Yeni Güncelleme Yayınla</div>
+      <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;">
+        Buradan yeni bir sürüm yayınladığınızda, kullanıcıların bilgisayarındaki AutoSync Resolve Studio uygulaması bunu anında tespit eder ve tek tıkla kendini günceller.
+      </p>
+
+      <form id="publishForm" onsubmit="handlePublish(event)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="form-group">
+            <label>Yeni Sürüm Numarası *</label>
+            <input type="text" id="inpVersion" placeholder="Örn: 3.2.0" required />
+          </div>
+          <div class="form-group">
+            <label>Yayın Tarihi</label>
+            <input type="date" id="inpDate" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Sürüm Başlığı</label>
+          <input type="text" id="inpTitle" placeholder="Örn: AutoSync Resolve Studio v3.2.0" />
+        </div>
+
+        <div class="form-group">
+          <label>Yenilikler (Changelog) - Her satıra bir madde</label>
+          <textarea id="inpChangelog" placeholder="• DaVinci Resolve 21.2 tam uyumluluk&#10;• Ses analizi hızlandırıldı&#10;• Hata düzeltmeleri"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Windows Kurulum Dosyası (AutoSync_Resolve_Studio_Windows_Setup.exe)</label>
+          <input type="file" id="fileWin" accept=".exe" style="display:none" onchange="updateFileName('fileWin', 'txtWinFile')" />
+          <div class="file-dropzone" onclick="document.getElementById('fileWin').click()">
+            <strong id="txtWinFile">📂 Windows Setup Dosyasını Seç (.exe)</strong>
+            <p>Masaüstündeki AutoSync_Resolve_Studio_Kurulum klasöründen seçin</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>macOS Kurulum Dosyası (AutoSync_Resolve_Studio_macOS_Setup.command)</label>
+          <input type="file" id="fileMac" accept=".command,.zip" style="display:none" onchange="updateFileName('fileMac', 'txtMacFile')" />
+          <div class="file-dropzone" onclick="document.getElementById('fileMac').click()">
+            <strong id="txtMacFile">📂 macOS Kurulum Dosyasını Seç (.command)</strong>
+            <p>Opsiyonel (Mac kullanıcıları için)</p>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">
+          🚀 YENİ SÜRÜMÜ TÜM BİLGİSAYARLARA YAYINLA
+        </button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🌐 Ücretsiz İnternet Yayını (Render.com / GitHub)</div>
+      <div class="info-box">
+        Bu güncelleme sunucusunu internet üzerinden <strong>tamamen ücretsiz ($0/ay)</strong> canlıya almak için 2 kolay seçenek:
+        <br/><br/>
+        <strong>1. Seçenek (Render.com - 100% Ücretsiz Node.js Cloud Sunucusu):</strong><br/>
+        • <a href="https://render.com" target="_blank" style="color:#60a5fa">render.com</a>'a ücretsiz kaydolun.<br/>
+        • <em>"New Web Service"</em> butonuna basın ve bu klasörü (veya GitHub reponuzu) bağlayın.<br/>
+        • Render size <span class="code-pill">https://autosync-update.onrender.com</span> gibi ücretsiz bir HTTPS adresi verir.<br/>
+        • Uygulamanın <span class="code-pill">update_config.json</span> dosyasına bu adresi eklemeniz yeterlidir.<br/><br/>
+
+        <strong>2. Seçenek (GitHub Releases - Sınırsız Hızlı CDN):</strong><br/>
+        • GitHub'da ücretsiz bir depo açıp <span class="code-pill">version.json</span> dosyasını yükleyin.<br/>
+        • İndirme bağlantısı olarak GitHub Releases linkini ekleyin.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function updateFileName(fileId, textId) {
+      const f = document.getElementById(fileId).files[0];
+      if (f) {
+        document.getElementById(textId).textContent = `✓ Seçildi: ${f.name} (${(f.size / (1024 * 1024)).toFixed(1)} MB)`;
+        document.getElementById(textId).style.color = '#4ade80';
+      }
+    }
+
+    async function loadStats() {
+      try {
+        const res = await fetch('/api/stats');
+        const data = await res.json();
+        document.getElementById('valCurrentVer').textContent = `v${data.currentVersion}`;
+        document.getElementById('valReleaseDate').textContent = `Yayın: ${data.releaseDate || '--'}`;
+        document.getElementById('valCheckCount').textContent = data.stats.checkCount || 0;
+
+        if (data.files.windowsSetupExists) {
+          document.getElementById('valWinSize').textContent = `${data.files.windowsSetupSizeMB} MB`;
+          document.getElementById('valWinDl').textContent = `${data.stats.windowsDownloadCount || 0} indirme`;
+        } else {
+          document.getElementById('valWinSize').textContent = 'Yüklenmedi';
+        }
+
+        if (data.files.macosSetupExists) {
+          document.getElementById('valMacSize').textContent = `${data.files.macosSetupSizeMB} MB`;
+          document.getElementById('valMacDl').textContent = `${data.stats.macosDownloadCount || 0} indirme`;
+        } else {
+          document.getElementById('valMacSize').textContent = 'Yüklenmedi';
+        }
+      } catch (_) {}
+    }
+
+    async function handlePublish(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmit');
+      const alertSuccess = document.getElementById('alertSuccess');
+      const alertError = document.getElementById('alertError');
+      alertSuccess.style.display = 'none';
+      alertError.style.display = 'none';
+
+      const version = document.getElementById('inpVersion').value.trim();
+      const title = document.getElementById('inpTitle').value.trim();
+      const date = document.getElementById('inpDate').value;
+      const changelog = document.getElementById('inpChangelog').value;
+      const winFile = document.getElementById('fileWin').files[0];
+      const macFile = document.getElementById('fileMac').files[0];
+
+      if (!version) {
+        alertError.textContent = 'Lütfen sürüm numarasını girin.';
+        alertError.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Güncelleme Paketi Sunucuya Yükleniyor...';
+
+      const formData = new FormData();
+      formData.append('version', version);
+      formData.append('title', title || `AutoSync Resolve Studio v${version}`);
+      if (date) formData.append('releaseDate', date);
+      formData.append('changelog', changelog);
+      if (winFile) formData.append('winSetup', winFile);
+      if (macFile) formData.append('macSetup', macFile);
+
+      try {
+        const res = await fetch('/api/publish', {
+          method: 'POST',
+          body: formData
+        });
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error || 'Yayınlama başarısız');
+
+        alertSuccess.textContent = `✓ Tebrikler! v${version} güncellemesi başarıyla yayınlandı. Kurulu tüm bilgisayarlar yeni sürümü hemen algılayacaktır.`;
+        alertSuccess.style.display = 'block';
+        btn.textContent = '✓ YAYINLANDI';
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = '🚀 YENİ SÜRÜMÜ TÜM BİLGİSAYARLARA YAYINLA';
+        }, 3000);
+        loadStats();
+      } catch (err) {
+        alertError.textContent = 'Hata: ' + err.message;
+        alertError.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = '🚀 YENİ SÜRÜMÜ TÜM BİLGİSAYARLARA YAYINLA';
+      }
+    }
+
+    document.getElementById('inpDate').value = new Date().toISOString().split('T')[0];
+    loadStats();
+  </script>
+</body>
+</html>
