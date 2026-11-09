@@ -12,11 +12,11 @@
   "windows": {
     "version": "3.1.0",
     "fileName": "AutoSync_Resolve_Studio_Windows_Setup.exe",
-    "downloadUrl": "https://raw.githubusercontent.com/sinan/autosync-resolve/main/Installers/AutoSync_Resolve_Studio_Windows_Setup.exe"
+    "downloadUrl": "https://github.com/sinanuney/autosync-update-server/releases/download/v3.1.0/AutoSync_Resolve_Studio_Windows_Setup.exe"
   },
   "macos": {
     "version": "3.1.0",
     "fileName": "AutoSync_Resolve_Studio_macOS_Setup.command",
-    "downloadUrl": "https://raw.githubusercontent.com/sinan/autosync-resolve/main/Installers/AutoSync_Resolve_Studio_macOS_Setup.command"
+    "downloadUrl": "https://github.com/sinanuney/autosync-update-server/releases/download/v3.1.0/AutoSync_Resolve_Studio_macOS_Setup.command"
   }
 }
