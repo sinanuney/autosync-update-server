@@ -1,0 +1,22 @@
+{
+  "version": "3.1.0",
+  "appName": "AutoSync Resolve Studio",
+  "releaseDate": "2026-11-09",
+  "title": "AutoSync Resolve Studio v3.1.0",
+  "changelog": [
+    "Birden fazla açık DaVinci Resolve penceresi arasında seçim yapabilme (Instance Selector)",
+    "Tek pencere açıkken seçim kutusu olmadan otomatik algılama",
+    "Varsayılan olarak 'Ayrı yeni timeline oluştur' ve 'Aradaki boşlukları kaldır' aktif",
+    "Otomatik ve manuel güncelleme denetimi ve kurulum sistemi"
+  ],
+  "windows": {
+    "version": "3.1.0",
+    "fileName": "AutoSync_Resolve_Studio_Windows_Setup.exe",
+    "downloadUrl": "https://raw.githubusercontent.com/sinan/autosync-resolve/main/Installers/AutoSync_Resolve_Studio_Windows_Setup.exe"
+  },
+  "macos": {
+    "version": "3.1.0",
+    "fileName": "AutoSync_Resolve_Studio_macOS_Setup.command",
+    "downloadUrl": "https://raw.githubusercontent.com/sinan/autosync-resolve/main/Installers/AutoSync_Resolve_Studio_macOS_Setup.command"
+  }
+}
