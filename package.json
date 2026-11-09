@@ -1,0 +1,20 @@
+{
+  "name": "autosync-resolve-update-server",
+  "version": "1.0.0",
+  "description": "AutoSync Resolve Studio - Ücretsiz OTA Güncelleme Dağıtım Sunucusu ve Yönetim Paneli",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "davinci-resolve",
+    "autosync",
+    "ota-updater",
+    "software-updates"
+  ],
+  "author": "AutoSync Studio",
+  "license": "MIT"
+}
