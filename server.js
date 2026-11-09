@@ -13,12 +13,14 @@ const PORT = Number(process.env.PORT || 8080);
 const DATA_DIR = path.join(__dirname, 'data');
 const FILES_DIR = path.join(__dirname, 'files');
 const PUBLIC_DIR = path.join(__dirname, 'public');
+const ARCHIVE_DIR = path.join(__dirname, 'archive');
 const VERSION_FILE = path.join(DATA_DIR, 'version.json');
 const STATS_FILE = path.join(DATA_DIR, 'stats.json');
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 fs.mkdirSync(FILES_DIR, { recursive: true });
 fs.mkdirSync(PUBLIC_DIR, { recursive: true });
+fs.mkdirSync(ARCHIVE_DIR, { recursive: true });
 
 function getStats() {
   try {
@@ -285,14 +287,51 @@ const server = http.createServer(async (req, res) => {
 
       fs.writeFileSync(VERSION_FILE, JSON.stringify(newVerData, null, 2), 'utf8');
 
+      // Her güncellenen sürüm için yerelde bağımsız arşiv klasörü oluştur
+      try {
+        const verArchiveDir = path.join(ARCHIVE_DIR, `v${version}`);
+        fs.mkdirSync(verArchiveDir, { recursive: true });
+        fs.writeFileSync(path.join(verArchiveDir, 'version.json'), JSON.stringify(newVerData, null, 2), 'utf8');
+        fs.writeFileSync(path.join(verArchiveDir, 'SURUM_NOTLARI.txt'), changelog.map(c => `• ${c}`).join('\r\n'), 'utf8');
+
+        const winSrc = path.join(FILES_DIR, 'AutoSync_Resolve_Studio_Windows_Setup.exe');
+        if (fs.existsSync(winSrc)) {
+          fs.copyFileSync(winSrc, path.join(verArchiveDir, `AutoSync_Resolve_Studio_Windows_Setup_v${version}.exe`));
+        }
+        const macSrc = path.join(FILES_DIR, 'AutoSync_Resolve_Studio_macOS_Setup.command');
+        if (fs.existsSync(macSrc)) {
+          fs.copyFileSync(macSrc, path.join(verArchiveDir, `AutoSync_Resolve_Studio_macOS_Setup_v${version}.command`));
+        }
+      } catch (archErr) {
+        console.error('Arşivleme uyarısı:', archErr.message);
+      }
+
       return sendJson(res, 200, {
         ok: true,
-        message: `v${version} güncellemesi başarıyla yayınlandı! Kurulu bilgisayarlar bu sürümü hemen algılayacaktır.`,
+        message: `v${version} güncellemesi başarıyla yayınlandı ve Surum_Arsivi klasörüne kopyalandı!`,
         versionData: newVerData
       });
     } catch (err) {
       return sendJson(res, 500, { ok: false, error: `Yayınlama hatası: ${err.message}` });
     }
+  }
+
+  // 6. Sürüm Arşivi Listesi
+  if (req.method === 'GET' && pathname === '/api/archive') {
+    const list = [];
+    if (fs.existsSync(ARCHIVE_DIR)) {
+      const folders = fs.readdirSync(ARCHIVE_DIR);
+      for (const f of folders) {
+        const vFile = path.join(ARCHIVE_DIR, f, 'version.json');
+        if (fs.existsSync(vFile)) {
+          try {
+            list.push(JSON.parse(fs.readFileSync(vFile, 'utf8')));
+          } catch (_) {}
+        }
+      }
+    }
+    list.sort((a, b) => b.version.localeCompare(a.version, undefined, { numeric: true }));
+    return sendJson(res, 200, { ok: true, archives: list });
   }
 
   // 6. Serve Admin Dashboard Static HTML
